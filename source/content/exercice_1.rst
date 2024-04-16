@@ -64,12 +64,79 @@ Le problème du rendu de monnaie consiste à réaliser une somme en utilisant le
 #.  Dans cette question et les suivantes, on admet que l'on dispose de pièces de 2 euros et de billets de 5, 10 et 20 euros. 
     a.  Quelle conséquence cela a-t-il de ne plus avoir de pièces de 1 euro ?
     b.  On rend la monnaie sur 11 euros avec les fonctions précédentes. Que remarque-t-on ? 
-#.  Comme on vient de le voir, l'agorithme glouton ne trouve pas de solution pour rendre 11 euros mais pourtant une solution existe bien ! On peut décomposer le problème de rendu de monnaie en sous-problèmes de même nature. Pour rendre la somme de 11 euros, cela revient à rendre 1 unité parmi ``[20,10,5,2]`` puis à rendre une somme réduite de cette unité. 
-    a.  Quelles ont les unités que l'on peut rendre sur 11 euros et quelles sont alors les sommes à rendre ?
+#.  Comme on vient de le voir, l'agorithme glouton ne trouve pas de solution pour rendre 11 euros mais pourtant une solution existe bien ! On peut décomposer le problème de rendu de monnaie en sous-problèmes de même nature. Pour rendre la somme de 11 euros, cela revient à rendre 1 unité parmi ``[20,10,5,2]`` puis à résoudre le problème avec une somme réduite de cette unité. 
+    a.  Quelles sont les unités que l'on peut rendre sur 11 euros et quelles sont alors les sommes à rendre ?
     b.  Représenter par un arbre toutes les possibilités pour rendre 11 euros.
 
 #.  On propose le code en Python suivant:
 
     .. code:: python
 
-        
+        unites = [20,10,5,2]
+
+        def rendu_monnaie_rec(somme_a_rendre):
+            if somme_a_rendre == 0:
+                return 0
+            else:
+                mini = 1000
+            for i in range(len(unites)):
+                if unites[i] <= somme_a_rendre:
+                    nb = 1 + rendu_monnaie_rec(somme_a_rendre - unites[i])
+                    if nb < mini:
+                        mini = nb
+            return mini
+
+    a.  Quel est le rôle de la variable ``mini`` ?
+    b.  Tester la fonction avec la somme à rendre de 37 euros.
+    c.  Que se passe-t-il lorsqu'on teste la fonction avec 60 euros ?
+
+#.  On définit un compteur pour connaître le nombre d'appels récursifs nécessaires pour avoir une solution au problème. On donne ci-dessous les modifications à apporter au code :
+
+    .. code:: python
+
+        cpt = 0
+
+        def rendu_monnaie_rec(somme_a_rendre):
+            global cpt
+            if somme_a_rendre == 0:
+                return 0
+            else:
+                mini = 1000
+            for i in range(len(unites)):
+                if unites[i] <= somme_a_rendre:
+                    cpt += 1
+                    nb = 1 + rendu_monnaie_rec(somme_a_rendre-unites[i])
+                    if nb < mini:
+                        mini = nb
+            return mini
+
+    Refaire les tests avec les sommes 11, 37 et 60 euros à rendre.
+    
+#.  On propose le programme suivant :
+
+    .. code:: python
+
+        unites = [20,10,5,2]
+
+        def rendu_monnaie_mem(somme_a_rendre):
+            mem = [0]*(somme_a_rendre + 1)
+            return rendu_monnaie_mem_rec(somme_a_rendre,mem)
+
+        def rendu_monnaie_mem_rec(somme_a_rendre,m):
+            if somme_a_rendre == 0:
+                return 0
+            elif m[somme_a_rendre] > 0:
+                return m[somme_a_rendre]
+            else:
+                mini = 1000
+            for i in range(len(unites)):
+                if unites[i] <= somme_a_rendre:
+                    nb = 1 + rendu_monnaie_mem_rec(somme_a_rendre - unites[i],m)
+                    if nb < mini:
+                        mini = nb
+                        m[somme_a_rendre] = mini
+            return mini
+
+    a.  Que contient le tableau ``mem`` après l'appel ``rendu_monnaie_mem(11)`` ?
+    b.  Refaire les tests avec les sommes 11, 37 et 60 euros à rendre. Que remarquez-vous ?
+    c.  Combien de pièces et billets faut-il pour rendre la somme de 587 euros ?

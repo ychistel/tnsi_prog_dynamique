@@ -16,5 +16,7 @@ Algorithmes avancés
    :hidden:
    
    content/activite_grille.rst
+   content/programmation_dynamique.rst
+   content/exercice_1.rst
    
 
