@@ -46,6 +46,7 @@
     <script src="../_static/custom.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="prev" title="La programmation dynamique" href="programmation_dynamique.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="fr"/>
   </head>
@@ -107,8 +108,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -148,8 +147,10 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="activite_grille.html">Parcourir une grille</a></li>
+<li class="toctree-l1"><a class="reference internal" href="programmation_dynamique.html">La programmation dynamique</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Exercices</a></li>
 </ul>
 
     </div>
@@ -372,10 +373,80 @@ document.write(`
 <li><p>Dans cette question et les suivantes, on admet que l’on dispose de pièces de 2 euros et de billets de 5, 10 et 20 euros.
 a.  Quelle conséquence cela a-t-il de ne plus avoir de pièces de 1 euro ?
 b.  On rend la monnaie sur 11 euros avec les fonctions précédentes. Que remarque-t-on ?</p></li>
-<li><p>Comme on vient de le voir, l’agorithme glouton ne trouve pas de solution pour rendre 11 euros mais pourtant une solution existe bien ! On peut décomposer le problème de rendu de monnaie en sous-problèmes de même nature. Pour rendre la somme de 11 euros, cela revient à rendre 1 unité parmi <code class="docutils literal notranslate"><span class="pre">[20,10,5,2]</span></code> puis à rendre une somme réduite de cette unité.
-a.  Quelles ont les unités que l’on peut rendre sur 11 euros et quelles sont alors les sommes à rendre ?
+<li><p>Comme on vient de le voir, l’agorithme glouton ne trouve pas de solution pour rendre 11 euros mais pourtant une solution existe bien ! On peut décomposer le problème de rendu de monnaie en sous-problèmes de même nature. Pour rendre la somme de 11 euros, cela revient à rendre 1 unité parmi <code class="docutils literal notranslate"><span class="pre">[20,10,5,2]</span></code> puis à résoudre le problème avec une somme réduite de cette unité.
+a.  Quelles sont les unités que l’on peut rendre sur 11 euros et quelles sont alors les sommes à rendre ?
 b.  Représenter par un arbre toutes les possibilités pour rendre 11 euros.</p></li>
-<li><p>On propose le code en Python suivant:</p></li>
+<li><p>On propose le code en Python suivant:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unites</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">rendu_monnaie_rec</span><span class="p">(</span><span class="n">somme_a_rendre</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">somme_a_rendre</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mini</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unites</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">unites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">somme_a_rendre</span><span class="p">:</span>
+            <span class="n">nb</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rendu_monnaie_rec</span><span class="p">(</span><span class="n">somme_a_rendre</span> <span class="o">-</span> <span class="n">unites</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">nb</span> <span class="o">&lt;</span> <span class="n">mini</span><span class="p">:</span>
+                <span class="n">mini</span> <span class="o">=</span> <span class="n">nb</span>
+    <span class="k">return</span> <span class="n">mini</span>
+</pre></div>
+</div>
+<ol class="loweralpha simple">
+<li><p>Quel est le rôle de la variable <code class="docutils literal notranslate"><span class="pre">mini</span></code> ?</p></li>
+<li><p>Tester la fonction avec la somme à rendre de 37 euros.</p></li>
+<li><p>Que se passe-t-il lorsqu’on teste la fonction avec 60 euros ?</p></li>
+</ol>
+</li>
+<li><p>On définit un compteur pour connaître le nombre d’appels récursifs nécessaires pour avoir une solution au problème. On donne ci-dessous les modifications à apporter au code :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cpt</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">rendu_monnaie_rec</span><span class="p">(</span><span class="n">somme_a_rendre</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">cpt</span>
+    <span class="k">if</span> <span class="n">somme_a_rendre</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mini</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unites</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">unites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">somme_a_rendre</span><span class="p">:</span>
+            <span class="n">cpt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">nb</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rendu_monnaie_rec</span><span class="p">(</span><span class="n">somme_a_rendre</span><span class="o">-</span><span class="n">unites</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">nb</span> <span class="o">&lt;</span> <span class="n">mini</span><span class="p">:</span>
+                <span class="n">mini</span> <span class="o">=</span> <span class="n">nb</span>
+    <span class="k">return</span> <span class="n">mini</span>
+</pre></div>
+</div>
+<p>Refaire les tests avec les sommes 11, 37 et 60 euros à rendre.</p>
+</li>
+<li><p>On propose le programme suivant :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unites</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">rendu_monnaie_mem</span><span class="p">(</span><span class="n">somme_a_rendre</span><span class="p">):</span>
+    <span class="n">mem</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">somme_a_rendre</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rendu_monnaie_mem_rec</span><span class="p">(</span><span class="n">somme_a_rendre</span><span class="p">,</span><span class="n">mem</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">rendu_monnaie_mem_rec</span><span class="p">(</span><span class="n">somme_a_rendre</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">somme_a_rendre</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="p">[</span><span class="n">somme_a_rendre</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">m</span><span class="p">[</span><span class="n">somme_a_rendre</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mini</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unites</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">unites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">somme_a_rendre</span><span class="p">:</span>
+            <span class="n">nb</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rendu_monnaie_mem_rec</span><span class="p">(</span><span class="n">somme_a_rendre</span> <span class="o">-</span> <span class="n">unites</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">m</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">nb</span> <span class="o">&lt;</span> <span class="n">mini</span><span class="p">:</span>
+                <span class="n">mini</span> <span class="o">=</span> <span class="n">nb</span>
+                <span class="n">m</span><span class="p">[</span><span class="n">somme_a_rendre</span><span class="p">]</span> <span class="o">=</span> <span class="n">mini</span>
+    <span class="k">return</span> <span class="n">mini</span>
+</pre></div>
+</div>
+<ol class="loweralpha simple">
+<li><p>Que contient le tableau <code class="docutils literal notranslate"><span class="pre">mem</span></code> après l’appel <code class="docutils literal notranslate"><span class="pre">rendu_monnaie_mem(11)</span></code> ?</p></li>
+<li><p>Refaire les tests avec les sommes 11, 37 et 60 euros à rendre. Que remarquez-vous ?</p></li>
+<li><p>Combien de pièces et billets faut-il pour rendre la somme de 587 euros ?</p></li>
+</ol>
+</li>
 </ol>
 </section>
 </section>
@@ -391,6 +462,15 @@ b.  Représenter par un arbre toutes les possibilités pour rendre 11 euros.</p>
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="programmation_dynamique.html"
+       title="page précédente">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">précédent</p>
+        <p class="prev-next-title">La programmation dynamique</p>
+      </div>
+    </a>
 </div>
                 </footer>
               
