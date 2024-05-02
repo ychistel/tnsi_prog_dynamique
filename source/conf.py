@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Les graphes'
+project = 'NSI'
 annee = '2024'
 author = 'Yannick Chistel'
 copyright = annee + ',' + author
@@ -56,7 +56,7 @@ exclude_patterns = ['nb/*']
 #
 #html_theme = 'alabaster'
 html_theme = 'sphinx_book_theme'
-html_title = 'NSI'
+html_title = '<a href="https://ychistel.github.io/cours/">NSI</a>'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
