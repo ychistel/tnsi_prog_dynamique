@@ -56,3 +56,13 @@ div.propriete.admonition{border-color:#404140;}
 div.propriete > p.admonition-title{background-color:#d4d4d4;color:#404140;}
 div.propriete > p.admonition-title::after{color:#404140;content: "\f013";}
 
+p.title{
+    text-align: center;
+    font-size: 4em;
+    padding-bottom: 20px;
+    background-color: var(--color-blue-light);
+}
+p.title a{
+    color:#404140;
+    text-decoration: none;
+}
